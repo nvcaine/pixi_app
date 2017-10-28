@@ -14,18 +14,20 @@ var ShapeSprite = function(x, y) {
 
 /**
  * Get a graphic object representing a triangle
- * @return PIXI.Graphic
+ * @return PIXI.Graphics
  */
 ShapeSprite.prototype.getTriangleGraphic = function() {
 
 	var graphic = new PIXI.Graphics();
 
-	graphic.beginFill(0xFF3300);
-	graphic.lineStyle(4, 0xffd900, 1);
-	graphic.moveTo(25, 0);
-	graphic.lineTo(0, 50);
-	graphic.lineTo(50, 50);
-	graphic.lineTo(25, 0);
+	graphic.beginFill(this.getRandomColor());
+	graphic.lineStyle(4, this.getRandomColor(), 1);
+	graphic.drawPolygon([
+		25, 0,
+		0, 50,
+		50, 50,
+		25, 0
+	]);
 	graphic.endFill();
 
 	return graphic;
@@ -33,19 +35,21 @@ ShapeSprite.prototype.getTriangleGraphic = function() {
 
 /**
  * Get a graphic object representing a square
- * @return PIXI.Graphic
+ * @return PIXI.Graphics
  */
 ShapeSprite.prototype.getSquareGraphic = function() {
 
 	var graphic = new PIXI.Graphics();
 
-	graphic.beginFill(0xFF3300);
-	graphic.lineStyle(4, 0xffd900, 1);
-	graphic.moveTo(0, 0);
-	graphic.lineTo(0, 50);
-	graphic.lineTo(50, 50);
-	graphic.lineTo(50, 0);
-	graphic.lineTo(0, 0);
+	graphic.beginFill(this.getRandomColor());
+	graphic.lineStyle(4, this.getRandomColor(), 1);
+	graphic.drawPolygon([
+		0, 0,
+		0, 50,
+		50, 50,
+		50, 0,
+		0, 0
+	]);
 	graphic.endFill();
 
 	return graphic;
@@ -53,20 +57,22 @@ ShapeSprite.prototype.getSquareGraphic = function() {
 
 /**
  * Get a graphic object representing a pentagon
- * @return PIXI.Graphic
+ * @return PIXI.Graphics
  */
 ShapeSprite.prototype.getPentaGraphic = function() {
 
 	var graphic = new PIXI.Graphics();
 
-	graphic.beginFill(0xFF3300);
-	graphic.lineStyle(4, 0xffd900, 1);
-	graphic.moveTo(25, 0);
-	graphic.lineTo(0, 20);
-	graphic.lineTo(10, 50);
-	graphic.lineTo(40, 50);
-	graphic.lineTo(50, 20);
-	graphic.lineTo(25, 0);
+	graphic.beginFill(this.getRandomColor());
+	graphic.lineStyle(4, this.getRandomColor(), 1);
+	graphic.drawPolygon([
+		25, 0,
+		0, 20,
+		10, 50,
+		40, 50,
+		50, 20,
+		25, 0
+	]);
 	graphic.endFill();
 
 	return graphic;
@@ -74,37 +80,84 @@ ShapeSprite.prototype.getPentaGraphic = function() {
 
 /**
  * Get a graphic object representing a hexagon
- * @return PIXI.Graphic
+ * @return PIXI.Graphics
  */
 ShapeSprite.prototype.getHexaGraphic = function() {
 
 	var graphic = new PIXI.Graphics();
 
-	graphic.beginFill(0xFF3300);
-	graphic.lineStyle(4, 0xffd900, 1);
-	graphic.moveTo(10, 0);
-	graphic.lineTo(0, 25);
-	graphic.lineTo(10, 50);
-	graphic.lineTo(40, 50);
-	graphic.lineTo(50, 25);
-	graphic.lineTo(40, 0);
-	graphic.lineTo(10, 0);
+	graphic.beginFill(this.getRandomColor());
+	graphic.lineStyle(4, this.getRandomColor(), 1);
+	graphic.drawPolygon([
+		10, 0,
+		0, 25,
+		10, 50,
+		40, 50,
+		50, 25,
+		40, 0,
+		10, 0]);
 	graphic.endFill();
 
 	return graphic;
 }
 
-ShapeSprite.prototype.getRandomGraphic = function(sides) {
+/**
+ * Get a graphic object representing a circle
+ * @return PIXI.Graphics
+ */
+ShapeSprite.prototype.getCircleGraphic = function() {
+
+	var graphic = new PIXI.Graphics();
+
+	graphic.lineStyle(4, this.getRandomColor(), 1);
+	graphic.beginFill(this.getRandomColor());
+	graphic.drawCircle(25, 25, 25);
+	graphic.endFill();
+
+	return graphic;
+}
+
+/**
+ * Get a graphic object representing a circle
+ * @return PIXI.Graphics
+ */
+ShapeSprite.prototype.getEllipseGraphic = function() {
+
+	var graphic = new PIXI.Graphics();
+
+	graphic.lineStyle(4, this.getRandomColor(), 1);
+	graphic.beginFill(this.getRandomColor());
+	graphic.drawEllipse(25, 25, 25, 20);
+	graphic.endFill();
+
+	return graphic;
+}
+
+/**
+ * Create graphic object based on number of sides
+ * @param sides number of sides
+ * @return PIXI.Graphics
+ */
+ShapeSprite.prototype.getGraphic = function(sides) {
 
 	switch(sides) {
+		case 1:
+			return this.getCircleGraphic();
+		case 2:
+			return this.getEllipseGraphic();
 		case 3:
 			return this.getTriangleGraphic();
 		case 4:
 			return this.getSquareGraphic();
 		case 5:
 			return this.getPentaGraphic();
+		case 6:
+			return this.getHexaGraphic();
 	}
-	return this.getHexaGraphic();
+}
+
+ShapeSprite.prototype.getRandomColor = function() {
+	return '0x' + (Math.random() * 0xFFFFFF << 0).toString(16);
 }
 
 /**
@@ -113,8 +166,8 @@ ShapeSprite.prototype.getRandomGraphic = function(sides) {
  */
 ShapeSprite.prototype.createNewSprite = function() {
 
-	var sides = 3 + parseInt(Math.random() * 4);
-	var graphic = this.getRandomGraphic(sides);
+	var sides = 1 + parseInt(Math.random() * 6);
+	var graphic = this.getGraphic(sides);
 
 	return new PIXI.Sprite(graphic.generateTexture());
 }

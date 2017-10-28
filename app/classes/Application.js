@@ -49,10 +49,11 @@ Application.prototype.initRenderer = function(headerHeight, footerHeight) {
 Application.prototype.initStage = function(headerHeight, footerHeight) {
 
 	var stageHeight = window.innerHeight - (headerHeight + footerHeight);
-	var baseObject = new PIXI.Graphics().beginFill(0x006600).drawRect(0, 0, window.innerWidth, stageHeight);
+	var baseObject = new PIXI.Graphics().beginFill(0x000000).drawRect(0, 0, window.innerWidth, stageHeight);
 
 	this.stage.interactive = true;
 	this.stage.click = this.clickHandler;
+	this.stage.tap = this.clickHandler;
 	this.stage.addChild(baseObject);
 }
 
