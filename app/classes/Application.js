@@ -1,5 +1,5 @@
 /**
- * Class used to wrap initialization logic
+ * Class used to wrap initialization and interface logic
  */
 var Application = function() {
 
