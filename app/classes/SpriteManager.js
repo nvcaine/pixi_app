@@ -6,6 +6,7 @@ var SpriteManager = function(stage) {
 
 	this.stage = stage;
 	this.sprites = [];
+	this.recycledSprites = [];
 	this.heightLimit = stage.height;
 	this.gravityValue = 2;
 	this.interval = undefined;
@@ -21,7 +22,15 @@ var SpriteManager = function(stage) {
  */
 SpriteManager.prototype.addSprite = function(x, y) {
 
-	var shapeSprite = new ShapeSprite(x, y);
+	var shapeSprite;
+
+	if(this.recycledSprites.length > 0) {
+		shapeSprite = this.recycledSprites.pop();
+		shapeSprite.reset(x, y);
+	} else {
+		shapeSprite = new ShapeSprite(x, y);
+	}
+
 	var sprite = shapeSprite.getSprite();
 	var instance = this;
 
@@ -47,8 +56,18 @@ SpriteManager.prototype.addSprite = function(x, y) {
  */
 SpriteManager.prototype.updateSprites = function() {
 
-	for(i = 0; i < this.sprites.length; i++)
-		this.sprites[i].update(this.gravityValue, this.heightLimit);
+	for(i = 0; i < this.sprites.length; i++) {
+		var sprite = this.sprites[i];
+
+		if(sprite.getSprite().y > this.heightLimit) {
+			this.recycledSprites.push(sprite);
+			this.stage.removeChild(sprite.getSprite());
+			this.sprites.splice(this.sprites.indexOf(sprite), 1);
+			this.eventManager.dispatchEvent(EventManager.UPDATE_SHAPES_COUNT_EVENT, {total: this.sprites.length});
+		} else {
+			sprite.update(this.gravityValue, this.heightLimit);
+		}
+	}
 }
 
 /**

@@ -4,6 +4,15 @@
  * @param y the vertical coordinate of the sprite
  */
 var ShapeSprite = function(x, y) {
+	this.reset(x, y);
+}
+
+/**
+ * Initialize the sprite with a random graphic
+ * @param x
+ * @param y
+ */
+ShapeSprite.prototype.reset = function(x, y) {
 
 	this.sprite = this.createNewSprite();
 	this.sprite.x = x;
@@ -171,6 +180,9 @@ ShapeSprite.prototype.getEllipseGraphic = function() {
 	return graphic;
 }
 
+/**
+ * Get a random color hex string
+ */
 ShapeSprite.prototype.getRandomColor = function() {
 	return '0x' + (Math.random() * 0xFFFFFF << 0).toString(16);
 }
@@ -187,12 +199,8 @@ ShapeSprite.prototype.getSprite = function() {
 /**
  * Update the vertical position of the sprite and reset it once it's out of stage bounds
  * @param speed the gravity value with which to update the sprite
- * @heightLimit the height of the stage
  */
-ShapeSprite.prototype.update = function(speed, heightLimit) {
+ShapeSprite.prototype.update = function(speed) {
 
 	this.sprite.y += speed;
-
-	if (this.sprite.y > heightLimit)
-		this.sprite.y = 0;
 }
