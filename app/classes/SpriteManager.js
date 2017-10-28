@@ -7,6 +7,7 @@ var SpriteManager = function(stage) {
 	this.stage = stage;
 	this.sprites = [];
 	this.heightLimit = stage.height;
+	this.gravityValue = 2;
 }
 
 /**
@@ -24,11 +25,12 @@ SpriteManager.prototype.addSprite = function(x, y) {
 
 /**
  * Parse and update current sprites
+ * @param speed the gravity value used to update the sprites
  */
-SpriteManager.prototype.updateSprites = function(speed) {
+SpriteManager.prototype.updateSprites = function() {
 
 	for(i = 0; i < this.sprites.length; i++)
-		this.sprites[i].update(2, this.heightLimit);
+		this.sprites[i].update(this.gravityValue, this.heightLimit);
 }
 
 /**
@@ -38,4 +40,9 @@ SpriteManager.prototype.updateSprites = function(speed) {
 SpriteManager.prototype.getSpriteCount = function() {
 
 	return this.sprites.length;
+}
+
+SpriteManager.prototype.updateGravityValue = function(value) {
+
+	this.gravityValue = value;
 }

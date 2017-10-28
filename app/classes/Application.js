@@ -23,6 +23,8 @@ Application.prototype.start = function(headerHeight, footerHeight) {
 	this.ticker.start();
 
 	this.spriteManager = new SpriteManager(this.stage);
+
+	this.initGravityInput('#gravity-value', '#gravity-increase', '#gravity-decrease');
 }
 
 /**
@@ -63,7 +65,7 @@ Application.prototype.initStage = function(headerHeight, footerHeight) {
 Application.prototype.renderStage = function() {
 
 	this.renderer.render(this.stage);
-	this.spriteManager.updateSprites(2);
+	this.spriteManager.updateSprites();
 }
 
 /**
@@ -89,5 +91,36 @@ Application.prototype.handleStageClick = function(event) {
  * @param elementSelector the selector string of the element(s) that display the sprite count
  */
 Application.prototype.updateTotalSpritesDisplay = function(elementSelector) {
+
 	$(elementSelector).val(this.spriteManager.getSpriteCount());
+}
+
+/**
+ * Initalize listeneres and handle gravity value update events
+ * @param textInputSelector selector string for gravity value text input
+ * @param increaseButtonSelector selector string for increasing gravity value
+ * @param decreaseButtonSelector selector string for decreasing gravity value
+ */
+Application.prototype.initGravityInput = function(textInputSelector, increaseButtonSelector, decreaseButtonSelector) {
+
+	var instance = this;
+
+	$(textInputSelector).change( function() {
+		instance.spriteManager.updateGravityValue(parseInt($(this).val()));
+	});
+
+	$(increaseButtonSelector).click( function() {
+		var valueElement = $(textInputSelector);
+		var newValue = parseInt(valueElement.val()) + 1;
+		valueElement.val(newValue).change();
+	});
+
+	$(decreaseButtonSelector).click( function() {
+		var valueElement = $(textInputSelector);
+		var newValue = parseInt(valueElement.val()) - 1;
+
+		if(newValue > -1)
+			valueElement.val(newValue).change();
+	});
+
 }
