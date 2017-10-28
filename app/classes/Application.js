@@ -7,6 +7,7 @@ var Application = function() {
 	this.stage = new PIXI.Container(0x000000);
 	this.ticker = new PIXI.ticker.Ticker();
 	this.spriteManager = undefined; // init the sprite manager once the stage is initialized
+	this.eventManager = new EventManager();
  }
 
 /**
@@ -23,8 +24,10 @@ Application.prototype.start = function(headerHeight, footerHeight) {
 	this.ticker.start();
 
 	this.spriteManager = new SpriteManager(this.stage);
-	document.addEventListener('added-sprite', function(event) {
-		instance.updateTotalSpritesDisplay('#total-sprites-count');
+
+	// listen for added sprites and update the count input value
+	this.eventManager.addEventListener(EventManager.ADD_SHAPE_EVENT, function(event) {
+		$('#total-sprites-count').val(event.detail.total);
 	})
 
 	// init gravity controls
@@ -97,15 +100,6 @@ Application.prototype.resizeCanvas = function(headerHeight, footerHeight) {
 Application.prototype.handleStageClick = function(event) {
 
 	this.spriteManager.addSprite(event.data.global.x, event.data.global.y);
-}
-
-/**
- * Display the current number of sprites
- * @param elementSelector the selector string of the element(s) that display the sprite count
- */
-Application.prototype.updateTotalSpritesDisplay = function(elementSelector) {
-
-	$(elementSelector).val(this.spriteManager.getSpriteCount());
 }
 
 /**

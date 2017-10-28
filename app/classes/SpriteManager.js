@@ -9,10 +9,13 @@ var SpriteManager = function(stage) {
 	this.heightLimit = stage.height;
 	this.gravityValue = 2;
 	this.interval = undefined;
+
+	this.eventManager = new EventManager();
 }
 
 /**
- * Add a sprite on stage using the specified coordinate
+ * Add a sprite on stage using the specified coordinate.
+ * When a sprite is added, an event is dispatched with the total number of sprites on stage.
  * @param x the horizontal coordinate of the sprite
  * @param y the vertical coordinate of the sprite
  */
@@ -23,7 +26,9 @@ SpriteManager.prototype.addSprite = function(x, y) {
 	this.stage.addChild(shapeSprite.getSprite());
 	this.sprites.push(shapeSprite);
 
-	document.dispatchEvent(new CustomEvent('added-sprite', {numSprites: this.sprites.length}));
+	// dispatch an event with the number of sprites on stage
+	this.eventManager.dispatchEvent(EventManager.ADD_SHAPE_EVENT, {total: this.sprites.length});
+
 }
 
 /**
@@ -37,22 +42,20 @@ SpriteManager.prototype.updateSprites = function() {
 }
 
 /**
- * Return the number of sprites currently displayed
- * @return int
+ * Set a new value for the gravity parameter
+ * @param value the gravity value
  */
-SpriteManager.prototype.getSpriteCount = function() {
-
-	return this.sprites.length;
-}
-
 SpriteManager.prototype.updateGravityValue = function(value) {
 
 	this.gravityValue = value;
 }
 
-SpriteManager.prototype.updateSpritesPerSecond = function(numberOfSpritesPerSecond) {
+/**
+ * Set an interval to generate the specified number of shapes per second
+ */
+SpriteManager.prototype.updateSpritesPerSecond = function(spritesPerSecond) {
 
-	var delay = parseInt(1000 / numberOfSpritesPerSecond);
+	var delay = parseInt(1000 / spritesPerSecond);
 	var instance = this;
 
 	if(this.interval !== undefined)
