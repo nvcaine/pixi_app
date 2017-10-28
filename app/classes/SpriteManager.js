@@ -22,13 +22,23 @@ var SpriteManager = function(stage) {
 SpriteManager.prototype.addSprite = function(x, y) {
 
 	var shapeSprite = new ShapeSprite(x, y);
+	var sprite = shapeSprite.getSprite();
+	var instance = this;
 
-	this.stage.addChild(shapeSprite.getSprite());
+	this.stage.addChild(sprite);
 	this.sprites.push(shapeSprite);
 
 	// dispatch an event with the number of sprites on stage
-	this.eventManager.dispatchEvent(EventManager.ADD_SHAPE_EVENT, {total: this.sprites.length});
+	this.eventManager.dispatchEvent(EventManager.UPDATE_SHAPES_COUNT_EVENT, {total: this.sprites.length});
 
+	// remove the sprite and wrapper, then update the total count
+	sprite.on('pointerup', function(event) {
+		event.stopPropagation(); // do not bubble the event to the stage
+	
+		instance.stage.removeChild(sprite);
+		instance.sprites.splice(instance.sprites.indexOf(shapeSprite), 1);
+		instance.eventManager.dispatchEvent(EventManager.UPDATE_SHAPES_COUNT_EVENT, {total: instance.sprites.length});
+	});
 }
 
 /**

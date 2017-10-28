@@ -10,6 +10,9 @@ var ShapeSprite = function(x, y) {
 	this.sprite.y = y;
 	this.sprite.anchor.x = 0.5;
 	this.sprite.anchor.y = 0.5;
+
+	this.sprite.buttonMode = true;
+	this.sprite.interactive = true;
 }
 
 /**

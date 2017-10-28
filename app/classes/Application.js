@@ -26,7 +26,7 @@ Application.prototype.start = function(headerHeight, footerHeight) {
 	this.spriteManager = new SpriteManager(this.stage);
 
 	// listen for added sprites and update the count input value
-	this.eventManager.addEventListener(EventManager.ADD_SHAPE_EVENT, function(event) {
+	this.eventManager.addEventListener(EventManager.UPDATE_SHAPES_COUNT_EVENT, function(event) {
 		$('#total-sprites-count').val(event.detail.total);
 	})
 

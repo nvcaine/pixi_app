@@ -25,4 +25,4 @@ EventManager.prototype.dispatchEvent = function(eventType, data) {
 }
 
 // add a constant to define the 'add shape' event
-Object.defineProperty(EventManager, 'ADD_SHAPE_EVENT', {value: 'add-shape'});
+Object.defineProperty(EventManager, 'UPDATE_SHAPES_COUNT_EVENT', {value: 'update-shapes-count'});
