@@ -12,6 +12,8 @@ var Application = function() {
 
 /**
  * Initialize the renderer, stage, ticker and SpriteManager members
+ * @param headerHeight the height of the header
+ * @param footerHeight the height of the footer
  */
 Application.prototype.start = function(headerHeight, footerHeight) {
 
@@ -87,6 +89,8 @@ Application.prototype.renderStage = function() {
 
 /**
  * Update canvas width and height based on current window size
+ * @param headerHeight the height of the header
+ * @param footerHeight the height of the footer
  */
 Application.prototype.resizeCanvas = function(headerHeight, footerHeight) {
 

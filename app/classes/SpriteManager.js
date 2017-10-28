@@ -81,6 +81,7 @@ SpriteManager.prototype.updateGravityValue = function(value) {
 
 /**
  * Set an interval to generate the specified number of shapes per second
+ * @param spritesPerSecond the number of sprites to generate in a second
  */
 SpriteManager.prototype.updateSpritesPerSecond = function(spritesPerSecond) {
 
