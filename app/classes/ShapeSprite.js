@@ -30,7 +30,7 @@ ShapeSprite.prototype.reset = function(x, y) {
  */
 ShapeSprite.prototype.createNewSprite = function() {
 
-	var sides = 1 + parseInt(Math.random() * 6);
+	var sides = 1 + parseInt(Math.random() * 7);
 	var graphic = this.getGraphic(sides);
 
 	return new PIXI.Sprite(graphic.generateTexture());
@@ -57,6 +57,8 @@ ShapeSprite.prototype.getGraphic = function(sides) {
 		case 6:
 			return this.getHexaGraphic();
 	}
+
+	return this.getRandomGraphic();
 }
 
 /**
@@ -180,6 +182,37 @@ ShapeSprite.prototype.getEllipseGraphic = function() {
 	return graphic;
 }
 
+/**
+ * Get a random shape with a random number of points
+ * @return PIXI.Graphics
+ */
+ShapeSprite.prototype.getRandomGraphic = function() {
+
+	var points = [];
+	var numberOfPoints = 7 + parseInt(Math.random() * 5); // 7 points minimum
+	var startingPointX = parseInt(Math.random() * 50);
+	var startingPointY = parseInt(Math.random() * 50);
+
+	points.push(startingPointX);
+	points.push(startingPointY);
+
+	for(i = 0; i < numberOfPoints; i++) {
+		points.push(parseInt(Math.random() * 50)); // x
+		points.push(parseInt(Math.random() * 50)); // y
+	}
+
+	points.push(startingPointX);
+	points.push(startingPointY);
+
+	var graphic = new PIXI.Graphics();
+
+	graphic.lineStyle(4, this.getRandomColor(), 1);
+	graphic.beginFill(this.getRandomColor());
+	graphic.drawPolygon(points);
+	graphic.endFill();
+
+	return graphic;
+}
 /**
  * Get a random color hex string
  */
