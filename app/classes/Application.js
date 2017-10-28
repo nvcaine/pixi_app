@@ -15,7 +15,7 @@ var Application = function() {
  */
 Application.prototype.start = function(headerHeight, footerHeight) {
 
-	var instance = this;
+	var instance = this; // used to access 'this' inside handlers
 
 	this.initRenderer(headerHeight, footerHeight);
 	this.initStage(headerHeight, footerHeight);
@@ -90,7 +90,9 @@ Application.prototype.renderStage = function() {
  */
 Application.prototype.resizeCanvas = function(headerHeight, footerHeight) {
 
-	this.renderer.resize(window.innerWidth, window.innerHeight - (headerHeight + footerHeight));
+	var height = window.innerHeight - (headerHeight + footerHeight);
+
+	this.renderer.resize(window.innerWidth, height);
 }
 
 /**
@@ -116,17 +118,18 @@ Application.prototype.initValueControl = function(textInputSelector, increaseBut
 	$(textInputSelector).change(handler);
 
 	$(increaseButtonSelector).click( function() {
+
 		var valueElement = $(textInputSelector);
 		var newValue = parseInt(valueElement.val()) + 1;
 		valueElement.val(newValue).change();
 	});
 
 	$(decreaseButtonSelector).click( function() {
+
 		var valueElement = $(textInputSelector);
 		var newValue = parseInt(valueElement.val()) - 1;
 
 		if(newValue > -1)
 			valueElement.val(newValue).change();
 	});
-
 }

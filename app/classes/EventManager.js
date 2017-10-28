@@ -1,5 +1,5 @@
 /**
- * Class used to wrap the document object, dispatch and handle events
+ * Class used to wrap the document object for dispatching and handling events
  */
 var EventManager = function() {
 }
