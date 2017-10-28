@@ -1,20 +1,20 @@
 /**
  * Class used to wrap initialization logic
- * @param clickHandler - function used to wrap the Application click handler
  */
-var Application = function(clickHandler) {
+var Application = function() {
 
 	this.renderer = PIXI.autoDetectRenderer(256, 256);
 	this.stage = new PIXI.Container(0x000000);
 	this.ticker = new PIXI.ticker.Ticker();
 	this.spriteManager = undefined; // init the sprite manager once the stage is initialized
-	this.clickHandler = clickHandler; // wrap the click handler so the app instance is accessible
  }
 
 /**
  * Initialize the renderer, stage, ticker and SpriteManager members
  */
 Application.prototype.start = function(headerHeight, footerHeight) {
+
+	var instance = this;
 
 	this.initRenderer(headerHeight, footerHeight);
 	this.initStage(headerHeight, footerHeight);
@@ -23,8 +23,19 @@ Application.prototype.start = function(headerHeight, footerHeight) {
 	this.ticker.start();
 
 	this.spriteManager = new SpriteManager(this.stage);
+	document.addEventListener('added-sprite', function(event) {
+		instance.updateTotalSpritesDisplay('#total-sprites-count');
+	})
 
-	this.initGravityInput('#gravity-value', '#gravity-increase', '#gravity-decrease');
+	// init gravity controls
+	this.initValueControl('#gravity-value', '#gravity-increase', '#gravity-decrease', function() {
+		instance.spriteManager.updateGravityValue(parseInt($(this).val()));
+	});
+
+	// init shapes-per-second controls
+	this.initValueControl('#shapes-value', '#shapes-increase', '#shapes-decrease', function() {
+		instance.spriteManager.updateSpritesPerSecond(parseInt($(this).val()));
+	});
 }
 
 /**
@@ -52,10 +63,13 @@ Application.prototype.initStage = function(headerHeight, footerHeight) {
 
 	var stageHeight = window.innerHeight - (headerHeight + footerHeight);
 	var baseObject = new PIXI.Graphics().beginFill(0x000000).drawRect(0, 0, window.innerWidth, stageHeight);
+	var instance = this; // used to access the Application instance inside the click handler
 
 	this.stage.interactive = true;
-	this.stage.click = this.clickHandler;
-	this.stage.tap = this.clickHandler;
+	this.stage.click = function(event) {
+		instance.handleStageClick(event);
+	};
+	this.stage.tap = this.clickHandler; // also handle touch events
 	this.stage.addChild(baseObject);
 }
 
@@ -83,7 +97,6 @@ Application.prototype.resizeCanvas = function(headerHeight, footerHeight) {
 Application.prototype.handleStageClick = function(event) {
 
 	this.spriteManager.addSprite(event.data.global.x, event.data.global.y);
-	this.updateTotalSpritesDisplay('#total-sprites-count');
 }
 
 /**
@@ -96,18 +109,17 @@ Application.prototype.updateTotalSpritesDisplay = function(elementSelector) {
 }
 
 /**
- * Initalize listeneres and handle gravity value update events
+ * Initalize listeneres and handle value update events for gravity and shapes-per-second controls
  * @param textInputSelector selector string for gravity value text input
  * @param increaseButtonSelector selector string for increasing gravity value
  * @param decreaseButtonSelector selector string for decreasing gravity value
+ * @param handler the function to be executed once the input value has been updated
  */
-Application.prototype.initGravityInput = function(textInputSelector, increaseButtonSelector, decreaseButtonSelector) {
+Application.prototype.initValueControl = function(textInputSelector, increaseButtonSelector, decreaseButtonSelector, handler) {
 
 	var instance = this;
 
-	$(textInputSelector).change( function() {
-		instance.spriteManager.updateGravityValue(parseInt($(this).val()));
-	});
+	$(textInputSelector).change(handler);
 
 	$(increaseButtonSelector).click( function() {
 		var valueElement = $(textInputSelector);

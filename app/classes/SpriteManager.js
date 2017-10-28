@@ -8,6 +8,7 @@ var SpriteManager = function(stage) {
 	this.sprites = [];
 	this.heightLimit = stage.height;
 	this.gravityValue = 2;
+	this.interval = undefined;
 }
 
 /**
@@ -21,6 +22,8 @@ SpriteManager.prototype.addSprite = function(x, y) {
 
 	this.stage.addChild(shapeSprite.getSprite());
 	this.sprites.push(shapeSprite);
+
+	document.dispatchEvent(new CustomEvent('added-sprite', {numSprites: this.sprites.length}));
 }
 
 /**
@@ -45,4 +48,19 @@ SpriteManager.prototype.getSpriteCount = function() {
 SpriteManager.prototype.updateGravityValue = function(value) {
 
 	this.gravityValue = value;
+}
+
+SpriteManager.prototype.updateSpritesPerSecond = function(numberOfSpritesPerSecond) {
+
+	var delay = parseInt(1000 / numberOfSpritesPerSecond);
+	var instance = this;
+
+	if(this.interval !== undefined)
+		clearInterval(this.interval);
+
+	if(delay > 0)
+		this.interval = setInterval( function() {
+			var x = parseInt(Math.random() * (instance.stage.width - 25)) + 25;
+			instance.addSprite(x, 0);
+		}, delay);
 }

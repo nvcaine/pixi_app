@@ -1,7 +1,5 @@
 // create a new application;
-var app = new Application( function(event) {
-	app.handleStageClick(event);
-});
+var app = new Application();
 
 // and run it
 app.start($('#header').outerHeight(), $('footer').outerHeight());

@@ -13,6 +13,41 @@ var ShapeSprite = function(x, y) {
 }
 
 /**
+ * Create a sprite object with a random graphic
+ * @return PIXI.Sprite
+ */
+ShapeSprite.prototype.createNewSprite = function() {
+
+	var sides = 1 + parseInt(Math.random() * 6);
+	var graphic = this.getGraphic(sides);
+
+	return new PIXI.Sprite(graphic.generateTexture());
+}
+
+/**
+ * Create graphic object based on number of sides
+ * @param sides number of sides
+ * @return PIXI.Graphics
+ */
+ShapeSprite.prototype.getGraphic = function(sides) {
+
+	switch(sides) {
+		case 1:
+			return this.getCircleGraphic();
+		case 2:
+			return this.getEllipseGraphic();
+		case 3:
+			return this.getTriangleGraphic();
+		case 4:
+			return this.getSquareGraphic();
+		case 5:
+			return this.getPentaGraphic();
+		case 6:
+			return this.getHexaGraphic();
+	}
+}
+
+/**
  * Get a graphic object representing a triangle
  * @return PIXI.Graphics
  */
@@ -133,43 +168,8 @@ ShapeSprite.prototype.getEllipseGraphic = function() {
 	return graphic;
 }
 
-/**
- * Create graphic object based on number of sides
- * @param sides number of sides
- * @return PIXI.Graphics
- */
-ShapeSprite.prototype.getGraphic = function(sides) {
-
-	switch(sides) {
-		case 1:
-			return this.getCircleGraphic();
-		case 2:
-			return this.getEllipseGraphic();
-		case 3:
-			return this.getTriangleGraphic();
-		case 4:
-			return this.getSquareGraphic();
-		case 5:
-			return this.getPentaGraphic();
-		case 6:
-			return this.getHexaGraphic();
-	}
-}
-
 ShapeSprite.prototype.getRandomColor = function() {
 	return '0x' + (Math.random() * 0xFFFFFF << 0).toString(16);
-}
-
-/**
- * Create a sprite object with a random graphic
- * @return PIXI.Sprite
- */
-ShapeSprite.prototype.createNewSprite = function() {
-
-	var sides = 1 + parseInt(Math.random() * 6);
-	var graphic = this.getGraphic(sides);
-
-	return new PIXI.Sprite(graphic.generateTexture());
 }
 
 /**
