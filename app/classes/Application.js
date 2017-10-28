@@ -1,6 +1,6 @@
 /**
  * Class used to wrap initialization logic
- * @param clickHandler - function used to wrap the instance click handler
+ * @param clickHandler - function used to wrap the Application click handler
  */
 var Application = function(clickHandler) {
 
@@ -12,29 +12,48 @@ var Application = function(clickHandler) {
  }
 
 /**
- * Update canvas width and height based on current window size
- */
-Application.prototype.resizeCanvas = function() {
-
-	var headerHeight = $('#header').outerHeight();
-	var footerHeight = $('footer').outerHeight()
-
-	this.renderer.resize(window.innerWidth, window.innerHeight - (headerHeight + footerHeight));
-}
-
-/**
  * Initialize the renderer, stage, ticker and SpriteManager members
  */
-Application.prototype.start = function() {
+Application.prototype.start = function(headerHeight, footerHeight) {
 
-	this.initRenderer();
-	this.initStage();
+	this.initRenderer(headerHeight, footerHeight);
+	this.initStage(headerHeight, footerHeight);
 
 	this.ticker.add(this.renderStage, this);
 	this.ticker.start();
 
-	this.spriteManager = new SpriteManager(this.stage)
-	this.spriteManager.addSprite(10, 10);
+	this.spriteManager = new SpriteManager(this.stage);
+}
+
+/**
+ * Initalize the renderer object and make the canvas cover maximum screen area
+ * @param headerHeight the height of the header to offset when defining the canvas height
+ * @param footerHeight the height of the footer to offset when defining the canvas height
+ */
+Application.prototype.initRenderer = function(headerHeight, footerHeight) {
+
+	$('body').append(this.renderer.view);
+
+	this.renderer.view.style.position = "absolute";
+	this.renderer.view.style.display = "block";
+	this.renderer.autoResize = true;
+
+	this.resizeCanvas(headerHeight, footerHeight);
+}
+
+/**
+ * Initialize the stage object, taking into account the footer and header height
+ * @param headerHeight the height of the header to offset when defining the stage height
+ * @param footerHeight the height of the footer to offset when defining the stage height
+ */
+Application.prototype.initStage = function(headerHeight, footerHeight) {
+
+	var stageHeight = window.innerHeight - (headerHeight + footerHeight);
+	var baseObject = new PIXI.Graphics().beginFill(0x006600).drawRect(0, 0, window.innerWidth, stageHeight);
+
+	this.stage.interactive = true;
+	this.stage.click = this.clickHandler;
+	this.stage.addChild(baseObject);
 }
 
 /**
@@ -47,32 +66,11 @@ Application.prototype.renderStage = function() {
 }
 
 /**
- * Initalize the renderer object and make the canvas cover maximum screen area
+ * Update canvas width and height based on current window size
  */
-Application.prototype.initRenderer = function() {
+Application.prototype.resizeCanvas = function(headerHeight, footerHeight) {
 
-	$('body').append(this.renderer.view);
-
-	this.renderer.view.style.position = "absolute";
-	this.renderer.view.style.display = "block";
-	this.renderer.autoResize = true;
-
-	this.resizeCanvas();
-}
-
-/**
- * Initialize the stage object, taking into account the footer and header height
- */
-Application.prototype.initStage = function() {
-
-	var headerHeight = $('#header').outerHeight();
-	var footerHeight = $('footer').outerHeight();
-	var stageHeight = window.innerHeight - (headerHeight + footerHeight);
-
-	var baseObject = new PIXI.Graphics().beginFill(0x006600).drawRect(0, 0, window.innerWidth, stageHeight);
-	this.stage.interactive = true;
-	this.stage.click = this.clickHandler;
-	this.stage.addChild(baseObject);
+	this.renderer.resize(window.innerWidth, window.innerHeight - (headerHeight + footerHeight));
 }
 
 /**
