@@ -74,7 +74,9 @@ Application.prototype.initStage = function(headerHeight, footerHeight) {
 	this.stage.click = function(event) {
 		instance.handleStageClick(event);
 	};
-	this.stage.tap = this.clickHandler; // also handle touch events
+	this.stage.tap = function(event) {
+		instance.handleStageClick(event);
+	}; // also handle touch events
 	this.stage.addChild(baseObject);
 }
 
