@@ -230,7 +230,7 @@ ShapeSprite.prototype.getSprite = function() {
 }
 
 /**
- * Update the vertical position of the sprite and reset it once it's out of stage bounds
+ * Update the vertical position of the sprite
  * @param speed the gravity value with which to update the sprite
  */
 ShapeSprite.prototype.update = function(speed) {

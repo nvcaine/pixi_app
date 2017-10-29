@@ -65,7 +65,7 @@ SpriteManager.prototype.updateSprites = function() {
 			this.sprites.splice(this.sprites.indexOf(sprite), 1);
 			this.eventManager.dispatchEvent(EventManager.UPDATE_SHAPES_COUNT_EVENT, {total: this.sprites.length});
 		} else {
-			sprite.update(this.gravityValue, this.heightLimit);
+			sprite.update(this.gravityValue);
 		}
 	}
 }
