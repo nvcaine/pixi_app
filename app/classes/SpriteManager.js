@@ -42,12 +42,9 @@ SpriteManager.prototype.addSprite = function(x, y) {
 
 	// remove the sprite and wrapper, then update the total count
 	sprite.on('pointerup', function(event) {
+
 		event.stopPropagation(); // do not bubble the event to the stage
-	
-		instance.stage.removeChild(sprite);
-		instance.sprites.splice(instance.sprites.indexOf(shapeSprite), 1);
-		instance.recycledSprites.push(shapeSprite);
-		instance.eventManager.dispatchEvent(EventManager.UPDATE_SHAPES_COUNT_EVENT, {total: instance.sprites.length});
+		instance.recycleSprite(shapeSprite);
 	});
 }
 
@@ -58,17 +55,26 @@ SpriteManager.prototype.addSprite = function(x, y) {
 SpriteManager.prototype.updateSprites = function() {
 
 	for(i = 0; i < this.sprites.length; i++) {
+
 		var sprite = this.sprites[i];
 
-		if(sprite.getSprite().y > this.heightLimit) {
-			this.recycledSprites.push(sprite);
-			this.stage.removeChild(sprite.getSprite());
-			this.sprites.splice(this.sprites.indexOf(sprite), 1);
-			this.eventManager.dispatchEvent(EventManager.UPDATE_SHAPES_COUNT_EVENT, {total: this.sprites.length});
-		} else {
+		if(sprite.getSprite().y > this.heightLimit)
+			this.recycleSprite(sprite);
+		else
 			sprite.update(this.gravityValue);
-		}
 	}
+}
+
+/**
+ * Recycle a sprite before removing it from stage.
+ * @param sprite the item to be recycled
+ */
+SpriteManager.prototype.recycleSprite = function(sprite) {
+
+	this.recycledSprites.push(sprite);
+	this.stage.removeChild(sprite.getSprite());
+	this.sprites.splice(this.sprites.indexOf(sprite), 1);
+	this.eventManager.dispatchEvent(EventManager.UPDATE_SHAPES_COUNT_EVENT, {total: this.sprites.length});
 }
 
 /**
