@@ -46,6 +46,7 @@ SpriteManager.prototype.addSprite = function(x, y) {
 	
 		instance.stage.removeChild(sprite);
 		instance.sprites.splice(instance.sprites.indexOf(shapeSprite), 1);
+		instance.recycledSprites.push(shapeSprite);
 		instance.eventManager.dispatchEvent(EventManager.UPDATE_SHAPES_COUNT_EVENT, {total: instance.sprites.length});
 	});
 }
